@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'io.ebean' version '12.15.1'
 }
 
 group = 'hexlet.code'
@@ -17,8 +18,16 @@ application {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+
     implementation("io.javalin:javalin:4.3.0")
+
     implementation 'org.slf4j:slf4j-simple:1.7.36'
+
+    implementation 'com.h2database:h2:2.1.210'
+
+    implementation 'io.ebean:ebean:12.15.1'
+    implementation 'io.ebean:ebean-querybean:12.15.1'
+    implementation 'io.ebean:ebean-annotation:7.7'
 }
 
 test {
