@@ -6,7 +6,7 @@ import org.thymeleaf.TemplateEngine;
 
 public class App {
     public static void main(String[] args) {
-        Javalin app = getapp();
+        Javalin app = getApp();
         app.start(getPort());
     }
 
@@ -19,13 +19,12 @@ public class App {
         return Integer.valueOf(port);
     }
 
-    public static Javalin getapp() {
+    public static Javalin getApp() {
         var app = Javalin.create(config -> {
             config.enableDevLogging();
         });
-
-        //TemplateEngine templateEngine = new TemplateEngine();
-
+        // JavalinThymeleaf
+        // TemplateEngine templateEngine = new TemplateEngine();
 
         addRoutes(app);
 
