@@ -2,6 +2,7 @@ package hexlet.code;
 
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
+import org.thymeleaf.TemplateEngine;
 
 public class App {
     public static void main(String[] args) {
@@ -22,6 +23,9 @@ public class App {
         var app = Javalin.create(config -> {
             config.enableDevLogging();
         });
+
+        //TemplateEngine templateEngine = new TemplateEngine();
+
 
         addRoutes(app);
 
