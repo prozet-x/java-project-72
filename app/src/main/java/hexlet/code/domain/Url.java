@@ -17,6 +17,14 @@ public final class Url extends Model {
 
     private String name;
 
+    public Url() {
+
+    }
+
+//    public Url (String name) {
+//        this.name = name;
+//    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
@@ -25,8 +33,8 @@ public final class Url extends Model {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public long getId() {
+        return id;
     }
 
     @WhenCreated
