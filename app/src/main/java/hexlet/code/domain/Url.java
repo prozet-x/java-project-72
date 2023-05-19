@@ -17,13 +17,13 @@ public final class Url extends Model {
 
     private String name;
 
-    public Url() {
-
-    }
-
-//    public Url (String name) {
-//        this.name = name;
+//    public Url() {
+//
 //    }
+
+    public Url (String name) {
+        this.name = name;
+    }
 
     public Instant getCreatedAt() {
         return createdAt;
