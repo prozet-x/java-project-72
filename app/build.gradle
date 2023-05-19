@@ -27,6 +27,8 @@ dependencies {
 
     implementation 'com.h2database:h2:2.1.210'
 
+    implementation 'org.webjars:bootstrap:5.1.1'
+
     // NOTE: ebean-ddl-generator требует старые зависимости, которых нет в java 9 и выше
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.5'
     implementation 'javax.activation:activation:1.1.1'
