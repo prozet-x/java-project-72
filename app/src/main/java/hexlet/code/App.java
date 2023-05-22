@@ -18,6 +18,7 @@ public class App {
     public static void addRoutes(Javalin app) {
         app.get("/", RootController.root);
         app.post("/urls", UrlController.newUrl);
+        app.get("/urls", UrlController.urlList);
     }
 
     private static Integer getPort() {

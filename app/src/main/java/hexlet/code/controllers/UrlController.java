@@ -22,4 +22,10 @@ public final class UrlController {
 
         ctx.redirect("/");
     };
+
+    public static Handler urlList = ctx -> {
+        List<Url> urls = new QUrl().findList();
+        ctx.attribute("urls", urls);
+        ctx.render("list.html");
+    };
 }
