@@ -17,6 +17,9 @@ public final class Url extends Model {
 
     private String name;
 
+    @WhenCreated
+    private Instant createdAt;
+
 //    public Url() {
 //
 //    }
@@ -36,7 +39,4 @@ public final class Url extends Model {
     public long getId() {
         return id;
     }
-
-    @WhenCreated
-    private Instant createdAt;
 }

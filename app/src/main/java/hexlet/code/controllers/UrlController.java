@@ -11,15 +11,15 @@ public final class UrlController {
         String urlAddress = ctx.formParam("url");
 
         if (urlAddress.isEmpty() || urlAddress.equals("123")) {
-            //ctx.attribute("urlAddress", urlAddress);
-            ctx.sessionAttribute("flash", "Необходимо ввести корректный Url");
+            ctx.attribute("urlAddress", urlAddress);
+            ctx.sessionAttribute("flash", "Некорректный Url");
             ctx.sessionAttribute("flash-type", "danger");
             //ctx.render("layouts/application.html");
-            ctx.redirect("/");
-            return;
+        } else {
+            Url url = new Url(urlAddress);
+            url.save();
         }
 
-        Url url = new Url(urlAddress);
-        url.save();
+        ctx.redirect("/");
     };
 }
