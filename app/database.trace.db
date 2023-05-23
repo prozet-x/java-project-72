@@ -1,0 +1,18 @@
+2023-05-23 23:41:23 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "([*]'The Lathe of Heaven', '2022-02-21 12:00:40'),\000a('Clouds of Witness', '2022-02-21 12:00:40'),\000a('Eyeless in Gaza', '2022-02-21 12:00:40'),\000a('Oh! To be in England', '2022-02-21 12:00:40'),\000a('A Passage to India', '2022-02-21 12:00:40'),\000a('Tender Is the Night', '2022-02-21 12:00:40'),\000a('The Last Enemy', '2022-02-21 12:00:40'),\000a('I Know Why the Caged Bird Sings', '2022-02-21 12:00:40'),\000a('East of Eden', '2022-02-21 12:00:40'),\000a('The Moving Toyshop', '2022-02-21 12:00:40'),\000a('Death Be Not Proud', '2022-02-21 12:00:40'),\000a('Dying of the Light', '2022-02-21 12:00:40'),\000a('The Monkey`s Raincoat', '2022-02-21 12:00:40'),\000a('The World, the Flesh and the Devil', '2022-02-21 12:00:40'),\000a('To a God Unknown', '2022-02-21 12:00:40')"; ожидалось "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "([*]'The Lathe of Heaven', '2022-02-21 12:00:40'),\000a('Clouds of Witness', '2022-02-21 12:00:40'),\000a('Eyeless in Gaza', '2022-02-21 12:00:40'),\000a('Oh! To be in England', '2022-02-21 12:00:40'),\000a('A Passage to India', '2022-02-21 12:00:40'),\000a('Tender Is the Night', '2022-02-21 12:00:40'),\000a('The Last Enemy', '2022-02-21 12:00:40'),\000a('I Know Why the Caged Bird Sings', '2022-02-21 12:00:40'),\000a('East of Eden', '2022-02-21 12:00:40'),\000a('The Moving Toyshop', '2022-02-21 12:00:40'),\000a('Death Be Not Proud', '2022-02-21 12:00:40'),\000a('Dying of the Light', '2022-02-21 12:00:40'),\000a('The Monkey`s Raincoat', '2022-02-21 12:00:40'),\000a('The World, the Flesh and the Devil', '2022-02-21 12:00:40'),\000a('To a God Unknown', '2022-02-21 12:00:40')"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+('The Lathe of Heaven', '2022-02-21 12:00:40'),
+('Clouds of Witness', '2022-02-21 12:00:40'),
+('Eyeless in Gaza', '2022-02-21 12:00:40'),
+('Oh! To be in England', '2022-02-21 12:00:40'),
+('A Passage to India', '2022-02-21 12:00:40'),
+('Tender Is the Night', '2022-02-21 12:00:40'),
+('The Last Enemy', '2022-02-21 12:00:40'),
+('I Know Why the Caged Bird Sings', '2022-02-21 12:00:40'),
+('East of Eden', '2022-02-21 12:00:40'),
+('The Moving Toyshop', '2022-02-21 12:00:40'),
+('Death Be Not Proud', '2022-02-21 12:00:40'),
+('Dying of the Light', '2022-02-21 12:00:40'),
+('The Monkey`s Raincoat', '2022-02-21 12:00:40'),
+('The World, the Flesh and the Devil', '2022-02-21 12:00:40'),
+('To a God Unknown', '2022-02-21 12:00:40') [42001-210]

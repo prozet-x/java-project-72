@@ -19,6 +19,7 @@ public class App {
         app.get("/", RootController.root);
         app.post("/urls", UrlController.newUrl);
         app.get("/urls", UrlController.urlList);
+        app.get("/urls/{id}", UrlController.showUrl);
     }
 
     private static Integer getPort() {
