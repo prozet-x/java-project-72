@@ -5,23 +5,44 @@ import hexlet.code.domain.query.QUrl;
 import io.ebean.PagedList;
 import io.javalin.http.Handler;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public final class UrlController {
     public static Handler newUrl = ctx -> {
-        String urlAddress = ctx.formParam("url");
+        String inputtedUrl = ctx.formParam("url");
+        URL url;
 
-        if (urlAddress.isEmpty() || urlAddress.equals("123")) {
-            //ctx.attribute("urlAddress", urlAddress);
+        try {
+            url = new URL(inputtedUrl);
+        } catch (MalformedURLException ex) {
             ctx.sessionAttribute("flash", "Некорректный Url");
             ctx.sessionAttribute("flash-type", "danger");
             ctx.render("index.html");
             return;
+        }
+
+        Url newUrl = new Url(
+                String.format("%s://%s%s",
+                    url.getProtocol(),
+                    url.getHost(),
+                    url.getPort() < 0
+                            ? ""
+                            : String.format(":%s", Integer.toString(url.getPort()))
+                )
+        );
+
+        Url existingUrl = new QUrl().name.equalTo(newUrl.getName()).findOne();
+        if (existingUrl != null) {
+            ctx.sessionAttribute("flash", "Страница уже существует");
+            ctx.sessionAttribute("flash-type", "warning");
         } else {
-            Url url = new Url(urlAddress);
-            url.save();
+            newUrl.save();
+            ctx.sessionAttribute("flash", "Страница успешно добавлена");
+            ctx.sessionAttribute("flash-type", "success");
         }
 
         ctx.redirect("/urls");
