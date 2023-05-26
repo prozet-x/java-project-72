@@ -1,12 +1,14 @@
-# Настройки ORM
 datasource:
-  # Задаём базу данных, к которой будет происходить подключение
-  db:
-    username: ""
-    password: ""
+  default: ${APP_ENV}
+  development:
+    username: "sa"
+    password: "sa"
     url: "jdbc:h2:./database"
+  production:
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
+    url: ${JDBC_DATABASE_URL}
 
-# Заполняем базу данных первоначальными данными
 ebean:
   db:
     ddl:
@@ -14,16 +16,15 @@ ebean:
       generate: true
       seedSql: seed.sql
 
+## Настройки ORM
 #datasource:
-#  default: ${APP_ENV}
-#  development:
-#    username: sa
-#    password: sa
+#  # Задаём базу данных, к которой будет происходить подключение
+#  db:
+#    username: ""
+#    password: ""
 #    url: "jdbc:h2:./database"
-#  production:
-#    username: ${JDBC_DATABASE_USERNAME}
-#    password: ${JDBC_DATABASE_PASSWORD}
-#    url: ${JDBC_DATABASE_URL}
+#
+# Заполняем базу данных первоначальными данными
 
 #ebean:
 #  ddl:
