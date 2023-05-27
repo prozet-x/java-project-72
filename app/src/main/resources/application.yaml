@@ -1,20 +1,20 @@
 datasource:
   default: ${APP_ENV}
   development:
-    username: "sa"
-    password: "sa"
+    username: sa
+    password: sa
     url: "jdbc:h2:./database"
   production:
     username: ${JDBC_DATABASE_USERNAME}
     password: ${JDBC_DATABASE_PASSWORD}
     url: ${JDBC_DATABASE_URL}
 
-ebean:
-  db:
-    ddl:
-      run: true
-      generate: true
-      seedSql: seed.sql
+#ebean:
+#  development:
+#    ddl:
+#      run: true
+#      generate: true
+#      seedSql: seed.sql
 
 ## Настройки ORM
 #datasource:
@@ -26,10 +26,10 @@ ebean:
 #
 # Заполняем базу данных первоначальными данными
 
-#ebean:
-#  ddl:
-#    run: true
-#    generate: true
-#    seedSql: seed.sql
+ebean:
+  ddl:
+    run: true
+    generate: true
+    seedSql: seed.sql
 #  migration:
 #    run: true

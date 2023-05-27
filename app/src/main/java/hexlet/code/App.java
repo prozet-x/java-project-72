@@ -28,6 +28,8 @@ public class App {
     }
 
     private static String getMode() {
+        System.out.println(System.getenv().getOrDefault("APP_ENV", "456"));
+        System.out.println(System.getenv("ASD"));
         return System.getenv().getOrDefault("APP_ENV", "development");
     }
 
