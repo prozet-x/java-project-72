@@ -19,7 +19,6 @@ public final class UrlController {
         try {
             url = new URL(inputtedUrl);
         } catch (MalformedURLException ex) {
-//            ctx.sessionAttribute("flash", "Некорректный Url");
             ctx.sessionAttribute("flash", "QQQ");
             ctx.sessionAttribute("flash-type", "danger");
             ctx.render("index.html");
@@ -38,12 +37,10 @@ public final class UrlController {
 
         Url existingUrl = new QUrl().name.equalTo(newUrl.getName()).findOne();
         if (existingUrl != null) {
-//            ctx.sessionAttribute("flash", "Страница уже существует");
             ctx.sessionAttribute("flash", "AAA");
             ctx.sessionAttribute("flash-type", "warning");
         } else {
             newUrl.save();
-//            ctx.sessionAttribute("flash", "Страница успешно добавлена");
             ctx.sessionAttribute("flash", "VVV");
             ctx.sessionAttribute("flash-type", "success");
         }
