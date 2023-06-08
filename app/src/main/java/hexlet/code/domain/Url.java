@@ -20,9 +20,9 @@ public final class Url extends Model {
     @WhenCreated
     private Instant createdAt;
 
-//    public Url() {
-//
-//    }
+    public Url() {
+
+    }
 
     public Url (String name) {
         this.name = name;
