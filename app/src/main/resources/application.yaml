@@ -9,23 +9,6 @@ datasource:
     password: ${PGPASSWORD}
     url: ${DATABASE_URL}
 
-#ebean:
-#  development:
-#    ddl:
-#      run: true
-#      generate: true
-#      seedSql: seed.sql
-
-## Настройки ORM
-#datasource:
-#  # Задаём базу данных, к которой будет происходить подключение
-#  db:
-#    username: ""
-#    password: ""
-#    url: "jdbc:h2:./database"
-#
-# Заполняем базу данных первоначальными данными
-
 ebean:
   ddl:
     run: true
