@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'io.ebean' version '13.17.4'
+    id 'jacoco'
 }
 
 group = 'hexlet.code'
@@ -63,12 +64,12 @@ task generateMigrations(type: JavaExec) {
 task stage(dependsOn: ['clean', 'installDist'])
 installDist.mustRunAfter clean
 
-jar {
-    manifest {
-        attributes "Main-Class": "hexlet.code.App"
-    }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
+//jar {
+//    manifest {
+//        attributes "Main-Class": "hexlet.code.App"
+//    }
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//    from {
+//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
+//}

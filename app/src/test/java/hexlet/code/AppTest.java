@@ -58,12 +58,42 @@ public class AppTest {
 
     @Test
     void addUrlGood() {
-        HttpResponse response = Unirest.post(baseUrl + "/urls")
-                .field("url", "https://www.avito.ru/")
+        HttpResponse responsePost = Unirest.post(baseUrl + "/urls")
+                .field("url", "https://www.avito.ru:3456/pp/abc?efg=qwe&rty=123")
                 .asEmpty();
-        assertThat(response.getStatus()).isEqualTo(302);
-        assertThat(response.getHeaders().getFirst("Location")).contains("/urls");
+        assertThat(responsePost.getStatus()).isEqualTo(302);
+        assertThat(responsePost.getHeaders().getFirst("Location")).contains("/urls");
 
+        HttpResponse<String> responseGet = Unirest.get(baseUrl + "/urls").queryString("page", "2").asString();
+        assertThat(responseGet.getStatus()).isEqualTo(200);
+        String body = responseGet.getBody().toString();
+        assertThat(body).contains("https://www.avito.ru:3456");
+        assertThat(body).contains("Страница успешно добавлена");
+    }
 
+    @Test
+    void addUrlBad1() {
+        HttpResponse<String> responsePost = Unirest.post(baseUrl + "/urls")
+                .field("url", "https://www.avito.ru:letters")
+                .asString();
+        assertThat(responsePost.getStatus()).isEqualTo(200);
+        assertThat(responsePost.getBody().toString()).contains("Некорректный Url");
+
+        HttpResponse<String> responseGet = Unirest.get(baseUrl + "/urls").queryString("page", "2").asString();
+        assertThat(responseGet.getStatus()).isEqualTo(200);
+        assertThat(responseGet.getBody().toString()).doesNotContain("www.avito.ru");
+    }
+
+    @Test
+    void addUrlBad2() {
+        HttpResponse<String> responsePost = Unirest.post(baseUrl + "/urls")
+                .field("url", "Just text. Bad URL.")
+                .asString();
+        assertThat(responsePost.getStatus()).isEqualTo(200);
+        assertThat(responsePost.getBody().toString()).contains("Некорректный Url");
+
+        HttpResponse<String> responseGet = Unirest.get(baseUrl + "/urls").queryString("page", "2").asString();
+        assertThat(responseGet.getStatus()).isEqualTo(200);
+        assertThat(responsePost.getBody().toString()).doesNotContain("Just text. Bad URL.");
     }
 }
