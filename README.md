@@ -3,4 +3,4 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/f0446ec26e09e5bde194/maintainability)](https://codeclimate.com/github/prozet-x/java-project-72/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/f0446ec26e09e5bde194/test_coverage)](https://codeclimate.com/github/prozet-x/java-project-72/test_coverage)
 
-[Demo on Railway](https://java-project-72-production-4242.up.railway.app/urls)
+[Demo on Railway](https://java-project-72-production-4242.up.railway.app)
