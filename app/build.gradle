@@ -55,6 +55,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
 }
 
 task generateMigrations(type: JavaExec) {
@@ -64,6 +65,12 @@ task generateMigrations(type: JavaExec) {
 
 task stage(dependsOn: ['clean', 'installDist'])
 installDist.mustRunAfter clean
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+}
 
 //jar {
 //    manifest {
