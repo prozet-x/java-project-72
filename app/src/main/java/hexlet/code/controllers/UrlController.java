@@ -4,7 +4,6 @@ import hexlet.code.domain.Url;
 import hexlet.code.domain.query.QUrl;
 import io.ebean.PagedList;
 import io.javalin.http.Handler;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -14,10 +13,10 @@ import java.util.stream.IntStream;
 public final class UrlController {
     public static Handler newUrl = ctx -> {
         String inputtedUrl = ctx.formParam("url");
-        URL url;
+        URL urlAddress;
 
         try {
-            url = new URL(inputtedUrl);
+            urlAddress = new URL(inputtedUrl);
         } catch (MalformedURLException ex) {
             ctx.sessionAttribute("flash", "Некорректный Url");
             ctx.sessionAttribute("flash-type", "danger");
@@ -25,22 +24,22 @@ public final class UrlController {
             return;
         }
 
-        Url newUrl = new Url(
+        Url urlToAdd = new Url(
                 String.format("%s://%s%s",
-                    url.getProtocol(),
-                    url.getHost(),
-                    url.getPort() < 0
+                    urlAddress.getProtocol(),
+                    urlAddress.getHost(),
+                    urlAddress.getPort() < 0
                             ? ""
-                            : String.format(":%s", Integer.toString(url.getPort()))
+                            : String.format(":%s", Integer.toString(urlAddress.getPort()))
                 )
         );
 
-        Url existingUrl = new QUrl().name.equalTo(newUrl.getName()).findOne();
+        Url existingUrl = new QUrl().name.equalTo(urlToAdd.getName()).findOne();
         if (existingUrl != null) {
             ctx.sessionAttribute("flash", "Страница уже существует");
             ctx.sessionAttribute("flash-type", "warning");
         } else {
-            newUrl.save();
+            urlToAdd.save();
             ctx.sessionAttribute("flash", "Страница успешно добавлена");
             ctx.sessionAttribute("flash-type", "success");
         }

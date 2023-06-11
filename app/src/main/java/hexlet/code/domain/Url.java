@@ -2,9 +2,6 @@ package hexlet.code.domain;
 
 import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
-import io.ebeaninternal.server.util.Str;
-
-import javax.annotation.processing.Generated;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.Instant;
@@ -24,7 +21,7 @@ public final class Url extends Model {
 
     }
 
-    public Url (String name) {
+    public Url(String name) {
         this.name = name;
     }
 
