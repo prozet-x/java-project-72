@@ -21,7 +21,7 @@ public final class Url extends Model {
 
     }
 
-    public Url(String name) {
+    public Url (String name) {
         this.name = name;
     }
 
