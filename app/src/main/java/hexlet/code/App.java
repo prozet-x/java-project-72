@@ -22,7 +22,7 @@ public class App {
         app.get("/urls/{id}", UrlController.showUrl);
     }
 
-    private static Integer getPort() {
+    public static Integer getPort() {
         String port = System.getenv().getOrDefault("PORT", "8080");
         return Integer.valueOf(port);
     }
