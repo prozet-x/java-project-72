@@ -4,6 +4,7 @@ import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.time.Instant;
 
 @Entity
@@ -16,6 +17,9 @@ public final class Url extends Model {
 
     @WhenCreated
     private Instant createdAt;
+
+    @ManyToOne
+    private UrlCheck urlChecks;
 
     public Url() {
 
