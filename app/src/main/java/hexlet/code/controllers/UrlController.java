@@ -12,6 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -81,7 +82,11 @@ public final class UrlController {
 
     public static Handler showUrl = ctx -> {
         Integer id = ctx.pathParamAsClass("id", Integer.class).get();
+
         Url url = new QUrl().id.eq(id).findOne();
+        List<UrlCheck> checks = url.getUrlChecks();
+        Collections.reverse(checks);
+        ctx.attribute("checks", checks);
         ctx.attribute("url", url);
         ctx.render("urls/show.html");
     };

@@ -32,15 +32,22 @@
 
     <table class="table table-bordered table-hover mt-3">
         <thead>
-        <th class="col-1">ID</th>
-        <th class="col-1">Код ответа</th>
-        <th>title</th>
-        <th>h1</th>
-        <th>description</th>
-        <th class="col-2">Дата проверки</th>
+            <th class="col-1">ID</th>
+            <th class="col-1">Код ответа</th>
+            <th>title</th>
+            <th>h1</th>
+            <th>description</th>
+            <th class="col-2">Дата проверки</th>
         </thead>
         <tbody>
-
+            <tr th:each="check : ${checks}" th:object="${check}">
+                <td th:text="*{getId()}"></td>
+                <td>1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 

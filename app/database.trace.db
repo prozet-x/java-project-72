@@ -10925,3 +10925,11 @@ Syntax error in SQL statement "INSERT INTO url_check (status_code, title, h1, de
 INSERT INTO url_check (status_code, title, h1, description, url_id, created_at) VALUES
 (200, 'The Man Within title', 'The Man Within H1', 'The Man Within desc', {1}, '2022-01-01 13:57:40'),
 (200, 'Consider the Lilies', 'Consider the Lilies H1', 'Consider the Lilies desc', {2}, '2022-02-01 13:57:40') [42001-214]
+2023-06-15 00:48:23 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "INSERT INTO url_check (status_code, title, h1, description, url_id, created_at) VALUES\000a(200, 'The Man Within title', 'The Man Within H1', 'The Man Within desc', 1, '2022-01-01 13:57:40'),\000a(200, 'The Man Within title 2', 'The Man Within H1 2', 'The Man Within desc 2', 2, '2022-01-01 13:57:42')\000a[*]UNION ALL\000a(200, 'Consider the Lilies', 'Consider the Lilies H1', 'Consider the Lilies desc', 2, '2022-02-01 13:57:40')"
+Syntax error in SQL statement "INSERT INTO url_check (status_code, title, h1, description, url_id, created_at) VALUES\000a(200, 'The Man Within title', 'The Man Within H1', 'The Man Within desc', 1, '2022-01-01 13:57:40'),\000a(200, 'The Man Within title 2', 'The Man Within H1 2', 'The Man Within desc 2', 2, '2022-01-01 13:57:42')\000a[*]UNION ALL\000a(200, 'Consider the Lilies', 'Consider the Lilies H1', 'Consider the Lilies desc', 2, '2022-02-01 13:57:40')"; SQL statement:
+INSERT INTO url_check (status_code, title, h1, description, url_id, created_at) VALUES
+(200, 'The Man Within title', 'The Man Within H1', 'The Man Within desc', 1, '2022-01-01 13:57:40'),
+(200, 'The Man Within title 2', 'The Man Within H1 2', 'The Man Within desc 2', 2, '2022-01-01 13:57:42')
+UNION ALL
+(200, 'Consider the Lilies', 'Consider the Lilies H1', 'Consider the Lilies desc', 2, '2022-02-01 13:57:40') [42000-214]
