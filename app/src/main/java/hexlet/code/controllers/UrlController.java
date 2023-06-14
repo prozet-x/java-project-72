@@ -1,9 +1,15 @@
 package hexlet.code.controllers;
 
 import hexlet.code.domain.Url;
+import hexlet.code.domain.UrlCheck;
 import hexlet.code.domain.query.QUrl;
 import io.ebean.PagedList;
 import io.javalin.http.Handler;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -78,5 +84,29 @@ public final class UrlController {
         Url url = new QUrl().id.eq(id).findOne();
         ctx.attribute("url", url);
         ctx.render("urls/show.html");
+    };
+
+    public static Handler urlCheck = ctx -> {
+//        Integer id = ctx.pathParamAsClass("id", Integer.class).get();
+//        Url url = new QUrl().id.equalTo(id).findOne();
+//        String urlName = url.getName();
+//
+//        HttpResponse<String> resp = Unirest.get(urlName).asString();
+//
+//        int status = resp.getStatus();
+//
+//        Document doc = Jsoup.parse(resp.getBody());
+//        String title = doc.title();
+//
+//        Element h1El = doc.getElementsByTag("h1").first();
+//        String h1 = h1El == null ? "" : h1El.text();
+//
+//        Element descEl = doc.select("meta[name=description]").first();
+//        String desc = descEl == null ? "" : descEl.attr("content");
+//
+//        UrlCheck check = new UrlCheck(status, title, h1, desc, url);
+//        check.save();
+//
+//        Unirest.shutDown();
     };
 }

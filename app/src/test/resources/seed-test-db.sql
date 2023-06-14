@@ -16,3 +16,6 @@ INSERT INTO url (name, created_at) VALUES
 ('The Monkey`s Raincoat', '2022-02-21 12:00:40'),
 ('The World, the Flesh and the Devil', '2022-02-21 12:00:40'),
 ('To a God Unknown', '2022-02-21 12:00:40');
+INSERT INTO url_check (status_code, title, h1, description, url_id, created_at) VALUES
+(200, 'The Man Within title', 'The Man Within H1', 'The Man Within desc', 1, '2022-01-01 13:57:40'),
+(200, 'Consider the Lilies', 'Consider the Lilies H1', 'Consider the Lilies desc', 2, '2022-02-01 13:57:40');
