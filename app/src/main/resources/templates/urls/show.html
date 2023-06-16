@@ -42,11 +42,11 @@
         <tbody>
             <tr th:each="check : ${checks}" th:object="${check}">
                 <td th:text="*{getId()}"></td>
-                <td>1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td th:text="*{getStatusCode()}"></td>
+                <td th:text="*{#strings.abbreviate(getTitle(), 20)}"></td>
+                <td th:text="*{#strings.abbreviate(getH1(), 20)}"></td>
+                <td th:text="*{#strings.abbreviate(getDescription(), 50)}"></td>
+                <td th:text="*{#temporals.format(getCreatedAt(), 'dd/MM/yyyy HH:MM')}"></td>
             </tr>
         </tbody>
     </table>
