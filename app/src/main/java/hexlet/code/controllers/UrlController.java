@@ -3,6 +3,8 @@ package hexlet.code.controllers;
 import hexlet.code.domain.Url;
 import hexlet.code.domain.UrlCheck;
 import hexlet.code.domain.query.QUrl;
+import hexlet.code.domain.query.QUrlCheck;
+import io.ebean.DB;
 import io.ebean.PagedList;
 import io.javalin.http.Handler;
 import kong.unirest.HttpResponse;
@@ -58,12 +60,45 @@ public final class UrlController {
         int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1) - 1;
         int rowsPerPage = 10;
 
+
+//        QCustomer cust = QCustomer.alias();
+//        QContact cont = QContact.alias();
+//
+//        List<Customer> customers =
+//                new QCustomer()
+//                        .select(cust.name, cust.version, cust.whenCreated)    // root level properties
+//                        .contacts.fetch(cont.email)                           // contacts is a OneToMany path
+//
+//                        .name.istartsWith("Rob")
+//                        .findList();
+
+
+        List<Url> urls1 =
+                DB.find(Url.class)
+                        .select("id, name")    // root level properties
+                        .fetch("urlChecks", "url")              // contacts is a OneToMany path
+                        .where()
+                        .istartsWith("name", "Rob")
+                        .findList();
+
+
+        QUrl url = QUrl.alias();
+        QUrlCheck urlCheck = QUrlCheck.alias();
         PagedList<Url> pagedUrls = new QUrl()
                 .setFirstRow(page * rowsPerPage)
                 .setMaxRows(rowsPerPage)
-                .orderBy()
-                .id.asc()
+                .orderBy().id.asc()
+                .select(url.id, url.name).urlChecks.fetch(urlCheck.statusCode, urlCheck.createdAt)
                 .findPagedList();
+
+
+
+//        PagedList<Url> pagedUrls = new QUrl()
+//                .setFirstRow(page * rowsPerPage)
+//                .setMaxRows(rowsPerPage)
+//                .orderBy()
+//                .id.asc()
+//                .findPagedList();
 
         List<Url> urls = pagedUrls.getList();
 
