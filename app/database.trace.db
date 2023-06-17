@@ -10933,3 +10933,7 @@ INSERT INTO url_check (status_code, title, h1, description, url_id, created_at) 
 (200, 'The Man Within title 2', 'The Man Within H1 2', 'The Man Within desc 2', 2, '2022-01-01 13:57:42')
 UNION ALL
 (200, 'Consider the Lilies', 'Consider the Lilies H1', 'Consider the Lilies desc', 2, '2022-02-01 13:57:40') [42000-214]
+2023-06-17 17:33:46 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "URL_CHECK" не найдена
+Table "URL_CHECK" not found; SQL statement:
+alter table url_check drop constraint if exists fk_url_check_url_id [42102-214]

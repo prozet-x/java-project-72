@@ -61,25 +61,25 @@ public final class UrlController {
         int rowsPerPage = 10;
 
 
-//        QCustomer cust = QCustomer.alias();
-//        QContact cont = QContact.alias();
-//
-//        List<Customer> customers =
-//                new QCustomer()
-//                        .select(cust.name, cust.version, cust.whenCreated)    // root level properties
-//                        .contacts.fetch(cont.email)                           // contacts is a OneToMany path
-//
-//                        .name.istartsWith("Rob")
+
+
+//        List<Url> urls1 =
+//                DB.find(Url.class)
+//                        .select("id, name")    // root level properties
+//                        .fetch("urlChecks", "url")              // contacts is a OneToMany path
+//                        .where()
+//                        .istartsWith("name", "Rob")
 //                        .findList();
 
 
-        List<Url> urls1 =
-                DB.find(Url.class)
-                        .select("id, name")    // root level properties
-                        .fetch("urlChecks", "url")              // contacts is a OneToMany path
-                        .where()
-                        .istartsWith("name", "Rob")
-                        .findList();
+//        QUrl url = QUrl.alias();
+//        QUrlCheck urlCheck = QUrlCheck.alias();
+//        PagedList<Url> pagedUrls = new QUrl()
+//                .setFirstRow(page * rowsPerPage)
+//                .setMaxRows(rowsPerPage)
+//                .select(url.id, url.name).urlChecks.fetch(urlCheck.statusCode, urlCheck.createdAt)
+//                .orderBy().id.asc()
+//                .findPagedList();
 
 
         QUrl url = QUrl.alias();
@@ -87,10 +87,14 @@ public final class UrlController {
         PagedList<Url> pagedUrls = new QUrl()
                 .setFirstRow(page * rowsPerPage)
                 .setMaxRows(rowsPerPage)
-                .orderBy().id.asc()
-                .select(url.id, url.name).urlChecks.fetch(urlCheck.statusCode, urlCheck.createdAt)
-                .findPagedList();
 
+                //.select(url.id, url.name)
+
+                .urlChecks.fetch("max(id)")
+                .urlChecks.fetchQuery()
+
+
+                .findPagedList();
 
 
 //        PagedList<Url> pagedUrls = new QUrl()
