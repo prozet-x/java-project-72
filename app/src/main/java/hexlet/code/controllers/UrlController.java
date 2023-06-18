@@ -4,8 +4,7 @@ import hexlet.code.domain.Url;
 import hexlet.code.domain.UrlCheck;
 import hexlet.code.domain.query.QUrl;
 import hexlet.code.domain.query.QUrlCheck;
-import io.ebean.DB;
-import io.ebean.PagedList;
+import io.ebean.*;
 import io.javalin.http.Handler;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
@@ -18,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static io.ebean.DB.find;
 
 public final class UrlController {
     public static Handler newUrl = ctx -> {
@@ -60,42 +61,13 @@ public final class UrlController {
         int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1) - 1;
         int rowsPerPage = 10;
 
-
-
-
-//        List<Url> urls1 =
-//                DB.find(Url.class)
-//                        .select("id, name")    // root level properties
-//                        .fetch("urlChecks", "url")              // contacts is a OneToMany path
-//                        .where()
-//                        .istartsWith("name", "Rob")
-//                        .findList();
-
-
-//        QUrl url = QUrl.alias();
-//        QUrlCheck urlCheck = QUrlCheck.alias();
-//        PagedList<Url> pagedUrls = new QUrl()
-//                .setFirstRow(page * rowsPerPage)
-//                .setMaxRows(rowsPerPage)
-//                .select(url.id, url.name).urlChecks.fetch(urlCheck.statusCode, urlCheck.createdAt)
-//                .orderBy().id.asc()
-//                .findPagedList();
-
-
         QUrl url = QUrl.alias();
         QUrlCheck urlCheck = QUrlCheck.alias();
         PagedList<Url> pagedUrls = new QUrl()
                 .setFirstRow(page * rowsPerPage)
                 .setMaxRows(rowsPerPage)
-
-                //.select(url.id, url.name)
-
                 .urlChecks.fetch("max(id)")
-                .urlChecks.fetchQuery()
-
-
                 .findPagedList();
-
 
 //        PagedList<Url> pagedUrls = new QUrl()
 //                .setFirstRow(page * rowsPerPage)
@@ -103,6 +75,29 @@ public final class UrlController {
 //                .orderBy()
 //                .id.asc()
 //                .findPagedList();
+
+        String query = "SELECT"
+                + " urls.id AS id_of_url, name, last_check_req.created_at AS last_check_datetime, name, status_code "
+            + "FROM "
+                + "urls "
+                + "LEFT JOIN "
+                + "(SELECT max_id_req.url_id AS url_id, created_at, status_code "
+                + "FROM "
+                    + "(SELECT "
+                        + "url_id, MAX(id) AS max_id "
+                    + "FROM "
+                        + "url_checks "
+                    + "GROUP BY url_id "
+                    + ") AS max_id_req "
+        LEFT JOIN
+        url_checks
+                ON
+        max_id = url_checks.id
+                        ) AS last_check_req
+        ON
+        urls.id = last_check_req.url_id
+        ORDER BY id_of_url DESC";
+
 
         List<Url> urls = pagedUrls.getList();
 
