@@ -76,30 +76,40 @@ public final class UrlController {
 //                .id.asc()
 //                .findPagedList();
 
-        String query = "SELECT"
-                + " urls.id AS id_of_url, name, last_check_req.created_at AS last_check_datetime, name, status_code "
-            + "FROM "
-                + "urls "
-                + "LEFT JOIN "
-                + "(SELECT max_id_req.url_id AS url_id, created_at, status_code "
-                + "FROM "
-                    + "(SELECT "
-                        + "url_id, MAX(id) AS max_id "
-                    + "FROM "
-                        + "url_checks "
-                    + "GROUP BY url_id "
-                    + ") AS max_id_req "
-        LEFT JOIN
-        url_checks
-                ON
-        max_id = url_checks.id
-                        ) AS last_check_req
-        ON
-        urls.id = last_check_req.url_id
-        ORDER BY id_of_url DESC";
+//        final String query = "SELECT"
+//                        + " u.id AS id_of_url, u.name, last_check_req.created_at AS last_check_datetime, c.status_code "
+//                    + "FROM "
+//                        + "url u"
+//                    + "LEFT JOIN "
+//                        + "(SELECT "
+//                            + "max_id_req.url_id AS url_id, created_at, status_code "
+//                        + "FROM "
+//                            + "(SELECT "
+//                                + "c.url_id, MAX(c.id) AS max_id "
+//                            + "FROM "
+//                                + "url_check c"
+//                            + "GROUP BY url_id "
+//                            + ") AS max_id_req "
+//                        + "LEFT JOIN "
+//                            + "url_check "
+//                        + "ON "
+//                            + "max_id = url_check.id "
+//                        + ") AS last_check_req "
+//                    + "ON "
+//                        + "url.id = last_check_req.url_id "
+//                    + "ORDER BY "
+//                        + "id_of_url DESC";
 
+        final String query = "SELECT c.id, c.status_code FROM url_check c";
 
-        List<Url> urls = pagedUrls.getList();
+        final RawSql rawSql = RawSqlBuilder.unparsed(query)
+                .columnMapping("c.id", "id")
+                .columnMapping("c.status_code", "statusCode")
+                .create();
+
+        List<UrlCheck> urlChecks = DB.find(UrlCheck.class).setRawSql(rawSql).findList();
+        List<Url> urls = null;
+        //List<Url> urls = pagedUrls.getList();
 
         int lastPage = pagedUrls.getTotalPageCount() + 1;
         int currentPage = pagedUrls.getPageIndex() + 1;
