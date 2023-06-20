@@ -100,11 +100,12 @@ public final class UrlController {
 //                    + "ORDER BY "
 //                        + "id_of_url DESC";
 
-        final String query = "SELECT c.id, c.status_code FROM url_check c";
+        final String query = "SELECT MAX(c.id), c.status_code, c.url_id FROM url_check c GROUP BY c.url_id";
 
         final RawSql rawSql = RawSqlBuilder.unparsed(query)
                 .columnMapping("c.id", "id")
                 .columnMapping("c.status_code", "statusCode")
+                .columnMapping("c.url_id", "url.id")
                 .create();
 
         List<UrlCheck> urlChecks = DB.find(UrlCheck.class).setRawSql(rawSql).findList();
