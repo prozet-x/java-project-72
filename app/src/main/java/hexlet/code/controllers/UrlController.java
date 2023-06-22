@@ -142,16 +142,24 @@ public final class UrlController {
 
 
 
-        List<Url> urls
-                = new QUrl()
-                .select("id, name,")
-                .urlChecks.fetchQuery("statusCode")
-                .urlChecks.fetchQuery("max(createdAt)")                 // (2) fetchQuery ...
-//                .status.notEqualTo(Order.Status.NEW)
+//        List<Url> urls
+//                = new QUrl()
+//                .select("id, name,")
+//                .urlChecks.fetchQuery("statusCode")
+//                //.urlChecks.fetchQuery("max(createdAt)")                 // (2) fetchQuery ...
+////                .status.notEqualTo(Order.Status.NEW)
+//                .findList();
+
+
+
+
+        //String sql = "select id, name from customer where name like ?";
+        final String query = "SELECT id, last_check_req.mid FROM url JOIN "
+                + "(SELECT MAX(id) AS mid, url_id FROM url_check GROUP BY url_id) AS last_check_req "
+                + "ON id = last_check_req.url_id";
+
+        List<Url> urls = DB.findNative(Url.class, query)
                 .findList();
-
-
-
 
 
 
