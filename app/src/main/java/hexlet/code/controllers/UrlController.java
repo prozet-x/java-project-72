@@ -13,6 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -100,16 +101,63 @@ public final class UrlController {
 //                    + "ORDER BY "
 //                        + "id_of_url DESC";
 
-        final String query = "SELECT MAX(c.id), c.status_code, c.url_id FROM url_check c GROUP BY c.url_id";
 
-        final RawSql rawSql = RawSqlBuilder.unparsed(query)
-                .columnMapping("c.id", "id")
-                .columnMapping("c.status_code", "statusCode")
-                .columnMapping("c.url_id", "url.id")
-                .create();
 
-        List<UrlCheck> urlChecks = DB.find(UrlCheck.class).setRawSql(rawSql).findList();
-        List<Url> urls = null;
+
+
+
+
+
+
+//        final String query = "SELECT last_check_req.mid AS lmid FROM url u LEFT JOIN "
+//                + "(SELECT MAX(c.id) AS mid, c.url_id AS uid FROM url_check c GROUP BY uid) AS last_check_req "
+//                + "ON id = last_check_req.uid";
+
+        //        final RawSql rawSql = RawSqlBuilder.unparsed(query)
+//                .columnMapping("u.id", "id")
+//                .columnMapping("mca", "urlChecks")
+////                .columnMapping("c.id", "urlChecks")
+////                .columnMapping("c.status_code", "urlChecks.statusCode")
+////                .columnMapping("c.url_id", "urlChecks.id")
+//                .create();
+
+
+
+
+
+
+
+
+//        final String query = "SELECT MAX(c.id) AS mid, c.url_id AS uid FROM url_check c GROUP BY uid";
+//
+//        final RawSql rawSql = RawSqlBuilder.unparsed(query)
+//                .columnMapping("mid", "id")
+//                .columnMapping("uid", "url.id")
+////                .columnMapping("c.id", "urlChecks")
+////                .columnMapping("c.status_code", "urlChecks.statusCode")
+////                .columnMapping("c.url_id", "urlChecks.id")
+//                .create();
+
+
+
+
+
+        List<Url> urls
+                = new QUrl()
+                .select("id, name,")
+                .urlChecks.fetchQuery("statusCode")
+                .urlChecks.fetchQuery("max(createdAt)")                 // (2) fetchQuery ...
+//                .status.notEqualTo(Order.Status.NEW)
+                .findList();
+
+
+
+
+
+
+
+        //List<UrlCheck> urlChecks = DB.find(UrlCheck.class).setRawSql(rawSql).findList();
+        //List<Url> urls = DB.find(Url.class).setRawSql(rawSql).findList();
         //List<Url> urls = pagedUrls.getList();
 
         int lastPage = pagedUrls.getTotalPageCount() + 1;
