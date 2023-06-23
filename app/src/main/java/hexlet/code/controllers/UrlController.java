@@ -14,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -118,7 +119,8 @@ public final class UrlController {
             Map<String, Object> record = new HashMap<>();
             record.put("id", row.getLong("id_of_url"));
             record.put("name", row.getString("name"));
-            record.put("last_check_datetime", row.getTimestamp("last_check_datetime").toInstant());
+            Timestamp dateOfCheck = row.getTimestamp("last_check_datetime");
+            record.put("last_check_datetime", dateOfCheck == null ? null : dateOfCheck.toInstant());
             record.put("status_code", row.getInteger("status_code"));
             urls.add(record);
         }
