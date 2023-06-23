@@ -20,11 +20,12 @@
     <tbody>
 
     <tr th:each="url : ${urls}" th:object="${url}">
-      <td th:text="*{getId()}"></td>
+      <td th:text="*{get('id')}"></td>
       <td>
-        <a th:href="@{/urls/{id}(id=*{getId()})}" th:text="${#strings.abbreviate(url.getName(), 30)}"></a>
+        <a th:href="@{/urls/{id}(id=*{get('id')})}" th:text="${#strings.abbreviate(url.get('name'), 30)}"></a>
       </td>
-      <td th:text="${#temporals.format(url.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
+      <td th:text="${#temporals.format(url.get('last_check_datetime'), 'dd/MM/yyyy HH:mm')}"></td>
+      <td></td>
       <td></td>
     </tr>
     </tbody>

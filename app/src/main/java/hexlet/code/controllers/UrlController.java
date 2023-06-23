@@ -5,6 +5,7 @@ import hexlet.code.domain.UrlCheck;
 import hexlet.code.domain.query.QUrl;
 import hexlet.code.domain.query.QUrlCheck;
 import io.ebean.*;
+import io.ebeaninternal.server.util.Str;
 import io.javalin.http.Handler;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
@@ -14,12 +15,12 @@ import org.jsoup.nodes.Element;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static io.ebean.DB.find;
+import static io.ebean.DB.sqlQuery;
 
 public final class UrlController {
     public static Handler newUrl = ctx -> {
@@ -77,29 +78,6 @@ public final class UrlController {
 //                .id.asc()
 //                .findPagedList();
 
-//        final String query = "SELECT"
-//                        + " u.id AS id_of_url, u.name, last_check_req.created_at AS last_check_datetime, c.status_code "
-//                    + "FROM "
-//                        + "url u"
-//                    + "LEFT JOIN "
-//                        + "(SELECT "
-//                            + "max_id_req.url_id AS url_id, created_at, status_code "
-//                        + "FROM "
-//                            + "(SELECT "
-//                                + "c.url_id, MAX(c.id) AS max_id "
-//                            + "FROM "
-//                                + "url_check c"
-//                            + "GROUP BY url_id "
-//                            + ") AS max_id_req "
-//                        + "LEFT JOIN "
-//                            + "url_check "
-//                        + "ON "
-//                            + "max_id = url_check.id "
-//                        + ") AS last_check_req "
-//                    + "ON "
-//                        + "url.id = last_check_req.url_id "
-//                    + "ORDER BY "
-//                        + "id_of_url DESC";
 
 
 
@@ -107,66 +85,45 @@ public final class UrlController {
 
 
 
+                //Этот запрос дает то, что нужно. Но тут не ясно, как делать привзку к полям класса
+                final String query = "SELECT" +
+                        "    url.id AS id_of_url, name, last_check_req.created_at AS last_check_datetime, status_code " +
+                        "FROM" +
+                        "    url" +
+                        "    LEFT JOIN" +
+                        "        (SELECT" +
+                        "            max_id_req.url_id AS url_id," +
+                        "            created_at," +
+                        "            status_code" +
+                        "        FROM" +
+                        "            (SELECT" +
+                        "                url_id," +
+                        "                MAX(id) AS max_id" +
+                        "            FROM url_check" +
+                        "            GROUP BY url_id" +
+                        "            ) AS max_id_req" +
+                        "        LEFT JOIN" +
+                        "            url_check" +
+                        "        ON" +
+                        "            max_id = url_check.id" +
+                        "        ) AS last_check_req" +
+                        "    ON" +
+                        "        url.id = last_check_req.url_id " +
+                        "ORDER BY id_of_url";
+        List<SqlRow> rows = sqlQuery(query).setFirstRow(page * rowsPerPage).setMaxRows(rowsPerPage).findList();
 
 
-//        final String query = "SELECT last_check_req.mid AS lmid FROM url u LEFT JOIN "
-//                + "(SELECT MAX(c.id) AS mid, c.url_id AS uid FROM url_check c GROUP BY uid) AS last_check_req "
-//                + "ON id = last_check_req.uid";
-
-        //        final RawSql rawSql = RawSqlBuilder.unparsed(query)
-//                .columnMapping("u.id", "id")
-//                .columnMapping("mca", "urlChecks")
-////                .columnMapping("c.id", "urlChecks")
-////                .columnMapping("c.status_code", "urlChecks.statusCode")
-////                .columnMapping("c.url_id", "urlChecks.id")
-//                .create();
+        List<Map<String, Object>> urls = new ArrayList<>();
+        for (SqlRow row: rows) {
+            Map<String, Object> record = new HashMap<>();
+            record.put("id", row.getLong("id_of_url"));
+            record.put("name", row.getString("name"));
+            record.put("last_check_datetime", row.getTimestamp("last_check_datetime").toInstant());
+            record.put("status_code", row.getInteger("status_code"));
+            urls.add(record);
+        }
 
 
-
-
-
-
-
-
-//        final String query = "SELECT MAX(c.id) AS mid, c.url_id AS uid FROM url_check c GROUP BY uid";
-//
-//        final RawSql rawSql = RawSqlBuilder.unparsed(query)
-//                .columnMapping("mid", "id")
-//                .columnMapping("uid", "url.id")
-////                .columnMapping("c.id", "urlChecks")
-////                .columnMapping("c.status_code", "urlChecks.statusCode")
-////                .columnMapping("c.url_id", "urlChecks.id")
-//                .create();
-
-
-
-
-
-//        List<Url> urls
-//                = new QUrl()
-//                .select("id, name,")
-//                .urlChecks.fetchQuery("statusCode")
-//                //.urlChecks.fetchQuery("max(createdAt)")                 // (2) fetchQuery ...
-////                .status.notEqualTo(Order.Status.NEW)
-//                .findList();
-
-
-
-
-        //String sql = "select id, name from customer where name like ?";
-        final String query = "SELECT id, last_check_req.mid FROM url JOIN "
-                + "(SELECT MAX(id) AS mid, url_id FROM url_check GROUP BY url_id) AS last_check_req "
-                + "ON id = last_check_req.url_id";
-
-        List<Url> urls = DB.findNative(Url.class, query)
-                .findList();
-
-
-
-
-        //List<UrlCheck> urlChecks = DB.find(UrlCheck.class).setRawSql(rawSql).findList();
-        //List<Url> urls = DB.find(Url.class).setRawSql(rawSql).findList();
-        //List<Url> urls = pagedUrls.getList();
 
         int lastPage = pagedUrls.getTotalPageCount() + 1;
         int currentPage = pagedUrls.getPageIndex() + 1;
