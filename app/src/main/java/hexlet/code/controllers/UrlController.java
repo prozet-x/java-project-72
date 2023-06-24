@@ -111,8 +111,10 @@ public final class UrlController {
                         "    ON" +
                         "        url.id = last_check_req.url_id " +
                         "ORDER BY id_of_url";
-        List<SqlRow> rows = sqlQuery(query).setFirstRow(page * rowsPerPage).setMaxRows(rowsPerPage).findList();
-
+        List<SqlRow> rows = sqlQuery(query)
+                .setFirstRow(page * rowsPerPage)
+                .setMaxRows(rowsPerPage)
+                .findList();
 
         List<Map<String, Object>> urls = new ArrayList<>();
         for (SqlRow row: rows) {
@@ -124,8 +126,6 @@ public final class UrlController {
             record.put("status_code", row.getInteger("status_code"));
             urls.add(record);
         }
-
-
 
         int lastPage = pagedUrls.getTotalPageCount() + 1;
         int currentPage = pagedUrls.getPageIndex() + 1;

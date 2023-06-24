@@ -25,8 +25,7 @@
         <a th:href="@{/urls/{id}(id=*{get('id')})}" th:text="${#strings.abbreviate(url.get('name'), 30)}"></a>
       </td>
       <td th:text="${#temporals.format(url.get('last_check_datetime'), 'dd/MM/yyyy HH:mm')}"></td>
-      <td></td>
-      <td></td>
+      <td th:text="*{get('status_code')}"></td>
     </tr>
     </tbody>
   </table>
