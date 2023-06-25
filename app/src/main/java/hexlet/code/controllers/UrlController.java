@@ -3,9 +3,7 @@ package hexlet.code.controllers;
 import hexlet.code.domain.Url;
 import hexlet.code.domain.UrlCheck;
 import hexlet.code.domain.query.QUrl;
-import hexlet.code.domain.query.QUrlCheck;
 import io.ebean.*;
-import io.ebeaninternal.server.util.Str;
 import io.javalin.http.Handler;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
@@ -15,12 +13,9 @@ import org.jsoup.nodes.Element;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static io.ebean.DB.find;
 import static io.ebean.DB.sqlQuery;
 
 public final class UrlController {
@@ -64,29 +59,12 @@ public final class UrlController {
         int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1) - 1;
         int rowsPerPage = 10;
 
-        QUrl url = QUrl.alias();
-        QUrlCheck urlCheck = QUrlCheck.alias();
         PagedList<Url> pagedUrls = new QUrl()
                 .setFirstRow(page * rowsPerPage)
                 .setMaxRows(rowsPerPage)
                 .urlChecks.fetch("max(id)")
                 .findPagedList();
 
-//        PagedList<Url> pagedUrls = new QUrl()
-//                .setFirstRow(page * rowsPerPage)
-//                .setMaxRows(rowsPerPage)
-//                .orderBy()
-//                .id.asc()
-//                .findPagedList();
-
-
-
-
-
-
-
-
-                //Этот запрос дает то, что нужно. Но тут не ясно, как делать привзку к полям класса
                 final String query = "SELECT" +
                         "    url.id AS id_of_url, name, last_check_req.created_at AS last_check_datetime, status_code " +
                         "FROM" +
@@ -152,26 +130,35 @@ public final class UrlController {
     };
 
     public static Handler urlCheck = ctx -> {
-//        Integer id = ctx.pathParamAsClass("id", Integer.class).get();
-//        Url url = new QUrl().id.equalTo(id).findOne();
-//        String urlName = url.getName();
-//
-//        HttpResponse<String> resp = Unirest.get(urlName).asString();
-//
-//        int status = resp.getStatus();
-//
-//        Document doc = Jsoup.parse(resp.getBody());
-//        String title = doc.title();
-//
-//        Element h1El = doc.getElementsByTag("h1").first();
-//        String h1 = h1El == null ? "" : h1El.text();
-//
-//        Element descEl = doc.select("meta[name=description]").first();
-//        String desc = descEl == null ? "" : descEl.attr("content");
-//
-//        UrlCheck check = new UrlCheck(status, title, h1, desc, url);
-//        check.save();
-//
-//        Unirest.shutDown();
+        Integer id = ctx.pathParamAsClass("id", Integer.class).get();
+        Url url = new QUrl().id.equalTo(id).findOne();
+        String urlName = url.getName();
+
+        try {
+            HttpResponse<String> resp = Unirest.get(urlName).asString();
+            int status = resp.getStatus();
+
+            Document doc = Jsoup.parse(resp.getBody());
+            String title = doc.title();
+
+            Element h1El = doc.getElementsByTag("h1").first();
+            String h1 = h1El == null ? "" : h1El.text();
+
+            Element descEl = doc.select("meta[name=description]").first();
+            String desc = descEl == null ? "" : descEl.attr("content");
+
+            UrlCheck check = new UrlCheck(status, title, h1, desc, url);
+            check.save();
+
+            Unirest.shutDown();
+
+            ctx.sessionAttribute("flash", "Страница успешно проверена");
+            ctx.sessionAttribute("flash-type", "success");
+        } catch (Exception ex) {
+            ctx.sessionAttribute("flash", "Некорректный адрес");
+            ctx.sessionAttribute("flash-type", "danger");
+        }
+
+        ctx.redirect(String.format("/urls/%d/", id));
     };
 }
