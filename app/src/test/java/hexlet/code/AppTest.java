@@ -5,6 +5,9 @@ import io.ebean.Database;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.internal.duplex.MockDuplexResponseBodyKt;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -128,5 +131,12 @@ public class AppTest {
         String body = response.getBody().toString();
         assertThat(body).contains("The Man Within");
         assertThat(body).contains("Проверки");
+    }
+
+    @Test
+    void check() {
+        MockWebServer server = new MockWebServer();
+        String address = server.url("/").toString();
+
     }
 }
