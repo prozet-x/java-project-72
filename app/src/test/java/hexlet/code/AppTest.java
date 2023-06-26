@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 public class AppTest {
     private static Javalin app;
@@ -143,16 +143,10 @@ public class AppTest {
     }
 
     @Test
-    void check() {
-        Scanner scanner;
-        String fixturePath = "./fixtures/response.html";
-        try {
-            scanner = new Scanner(Paths.get(fixturePath), StandardCharsets.UTF_8.name());
-        } catch (IOException ex) {
-            System.out.println(String.format("File %s does not found", fixturePath));
-            assertThat(true).isFalse();
-            return;
-        }
+    void check() throws IOException {
+        String fixturePath = "./src/test/resources/fixtures/response.html";
+
+        Scanner scanner = new Scanner(Paths.get(fixturePath), StandardCharsets.UTF_8.name());
         String data = scanner.useDelimiter("\\A").next();
         scanner.close();
 
@@ -160,5 +154,8 @@ public class AppTest {
         String address = server.url("/").toString();
 
         server.enqueue( new MockResponse().setBody(data));
+
+
+
     }
 }
