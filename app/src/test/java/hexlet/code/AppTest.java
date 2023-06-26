@@ -6,12 +6,21 @@ import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.internal.duplex.MockDuplexResponseBodyKt;
+import okio.Buffer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AppTest {
@@ -135,8 +144,21 @@ public class AppTest {
 
     @Test
     void check() {
+        Scanner scanner;
+        String fixturePath = "./fixtures/response.html";
+        try {
+            scanner = new Scanner(Paths.get(fixturePath), StandardCharsets.UTF_8.name());
+        } catch (IOException ex) {
+            System.out.println(String.format("File %s does not found", fixturePath));
+            assertThat(true).isFalse();
+            return;
+        }
+        String data = scanner.useDelimiter("\\A").next();
+        scanner.close();
+
         MockWebServer server = new MockWebServer();
         String address = server.url("/").toString();
 
+        server.enqueue( new MockResponse().setBody(data));
     }
 }
