@@ -41,7 +41,7 @@ public class AppTest {
     }
 
     @BeforeEach
-    public void beforeEach() {
+    public static void beforeEach() {
         database.script().run("/truncate.sql");
         database.script().run("/seed-test-db.sql");
     }
