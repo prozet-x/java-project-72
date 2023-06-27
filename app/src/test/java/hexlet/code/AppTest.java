@@ -36,12 +36,12 @@ public class AppTest {
     }
 
     @AfterAll
-    public static void afterAll() {
+    public final static void afterAll() {
         app.stop();
     }
 
     @BeforeEach
-    public static void beforeEach() {
+    public void beforeEach() {
         database.script().run("/truncate.sql");
         database.script().run("/seed-test-db.sql");
     }
