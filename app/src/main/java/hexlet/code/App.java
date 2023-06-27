@@ -20,7 +20,7 @@ public class App {
         app.post("/urls", UrlController.newUrl);
         app.get("/urls", UrlController.urlList);
         app.get("/urls/{id}", UrlController.showUrl);
-        app.post("/urls/{id}/check", UrlController.urlCheck);
+        app.post("/urls/{id}/checks", UrlController.urlCheck);
     }
 
     public static Integer getPort() {

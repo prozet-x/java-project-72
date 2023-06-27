@@ -5,23 +5,17 @@ import io.ebean.Database;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
-import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import okio.Buffer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Scanner;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AppTest {
     private static Javalin app;
@@ -151,11 +145,27 @@ public class AppTest {
         scanner.close();
 
         MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody(data));
+        server.start();
         String address = server.url("/").toString();
 
-        server.enqueue( new MockResponse().setBody(data));
+        HttpResponse addUrlPost = Unirest.post(baseUrl + "/urls")
+                .field("url", address)
+                .asEmpty();
+        assertThat(addUrlPost.getStatus()).isEqualTo(302);
 
+        HttpResponse checkPost = Unirest.post(baseUrl + "/urls/18/checks").asEmpty();
+        assertThat(checkPost.getStatus()).isEqualTo(302);
+        assertThat(checkPost.getHeaders().getFirst("Location")).contains("/urls/18");
 
+        HttpResponse get = Unirest.get(baseUrl + "/urls/18").asString();
+        String body = get.getBody().toString();
+        assertThat(body).contains("Test title");
+        assertThat(body).contains("Description test text");
+        assertThat(body).contains("H1 tag test text");
+        assertThat(body).doesNotContain("Other text");
+        assertThat(body).contains("Страница успешно проверена");
 
+        server.shutdown();
     }
 }

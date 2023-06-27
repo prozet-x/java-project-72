@@ -4,7 +4,6 @@ import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.time.Instant;
 import java.util.List;

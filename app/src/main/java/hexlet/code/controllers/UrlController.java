@@ -3,7 +3,8 @@ package hexlet.code.controllers;
 import hexlet.code.domain.Url;
 import hexlet.code.domain.UrlCheck;
 import hexlet.code.domain.query.QUrl;
-import io.ebean.*;
+import io.ebean.PagedList;
+import io.ebean.SqlRow;
 import io.javalin.http.Handler;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
@@ -13,12 +14,18 @@ import org.jsoup.nodes.Element;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import static io.ebean.DB.sqlQuery;
 
 public final class UrlController {
+    static final int ROWS_ON_PAGE = 10;
+
     public static Handler newUrl = ctx -> {
         String inputtedUrl = ctx.formParam("url");
         URL urlAddress;
@@ -57,41 +64,37 @@ public final class UrlController {
 
     public static Handler urlList = ctx -> {
         int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1) - 1;
-        int rowsPerPage = 10;
 
         PagedList<Url> pagedUrls = new QUrl()
-                .setFirstRow(page * rowsPerPage)
-                .setMaxRows(rowsPerPage)
-                .urlChecks.fetch("max(id)")
-                .findPagedList();
+            .setMaxRows(ROWS_ON_PAGE)
+            .findPagedList();
 
-                final String query = "SELECT" +
-                        "    url.id AS id_of_url, name, last_check_req.created_at AS last_check_datetime, status_code " +
-                        "FROM" +
-                        "    url" +
-                        "    LEFT JOIN" +
-                        "        (SELECT" +
-                        "            max_id_req.url_id AS url_id," +
-                        "            created_at," +
-                        "            status_code" +
-                        "        FROM" +
-                        "            (SELECT" +
-                        "                url_id," +
-                        "                MAX(id) AS max_id" +
-                        "            FROM url_check" +
-                        "            GROUP BY url_id" +
-                        "            ) AS max_id_req" +
-                        "        LEFT JOIN" +
-                        "            url_check" +
-                        "        ON" +
-                        "            max_id = url_check.id" +
-                        "        ) AS last_check_req" +
-                        "    ON" +
-                        "        url.id = last_check_req.url_id " +
-                        "ORDER BY id_of_url";
+        final String query = "SELECT "
+                + "url.id AS id_of_url, name, last_check_req.created_at AS last_check_datetime, status_code "
+            + "FROM "
+                + "url "
+            + "LEFT JOIN "
+                + "(SELECT "
+                    + "max_id_req.url_id AS url_id, created_at, status_code "
+                + "FROM "
+                    + "(SELECT "
+                        + "url_id, MAX(id) AS max_id "
+                    + "FROM "
+                        + "url_check "
+                    + "GROUP BY "
+                        + "url_id "
+                    + ") AS max_id_req "
+                    + "LEFT JOIN "
+                        + "url_check "
+                    + "ON "
+                        + "max_id = url_check.id "
+                    + ") AS last_check_req "
+            + "ON "
+                + "url.id = last_check_req.url_id "
+            + "ORDER BY id_of_url";
         List<SqlRow> rows = sqlQuery(query)
-                .setFirstRow(page * rowsPerPage)
-                .setMaxRows(rowsPerPage)
+                .setFirstRow(page * ROWS_ON_PAGE)
+                .setMaxRows(ROWS_ON_PAGE)
                 .findList();
 
         List<Map<String, Object>> urls = new ArrayList<>();
@@ -149,8 +152,6 @@ public final class UrlController {
 
             UrlCheck check = new UrlCheck(status, title, h1, desc, url);
             check.save();
-
-            Unirest.shutDown();
 
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flash-type", "success");
